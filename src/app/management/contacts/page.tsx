@@ -1,6 +1,7 @@
 'use client';
 
 import DashboardLayout from '@/components/layout/DashboardLayout';
+import TranslationForm from '@/components/ui/TranslationForm';
 import { useState } from 'react';
 import { MdBusiness, MdLocationOn, MdEmail, MdPhone, MdInbox, MdSend, MdAttachFile, MdRefresh, MdDelete, MdAdd, MdInfo } from 'react-icons/md';
 
@@ -14,17 +15,23 @@ interface EmailItem {
 }
 
 export default function ContactsManagementPage() {
-  const [companyName, setCompanyName] = useState<string>('DUDI Software');
-  const [addresses, setAddresses] = useState<string[]>([
-    '232 Nguyễn Thị Minh Khai, Phường Xuân Hoà, TP. HCM',
-    '49/2 Đường 14, Phường Thủ Đức, TP. HCM',
+  const [companyName, setCompanyName] = useState<{ source: string; target: string }>({
+    source: 'DUDI Software',
+    target: 'DUDI Software',
+  });
+  const [addresses, setAddresses] = useState<Array<{ source: string; target: string }>>([
+    { source: '232 Nguyễn Thị Minh Khai, Phường Xuân Hoà, TP. HCM', target: '232 Nguyen Thi Minh Khai, Xuan Hoa Ward, HCM City' },
+    { source: '49/2 Đường 14, Phường Thủ Đức, TP. HCM', target: '49/2 Street 14, Thu Duc Ward, HCM City' },
   ]);
-  const [description, setDescription] = useState<string>('Công ty phần mềm hàng đầu với giải pháp công nghệ hiện đại, sáng tạo giúp doanh nghiệp phát triển bền vững.');
+  const [description, setDescription] = useState<{ source: string; target: string }>({
+    source: 'Công ty phần mềm hàng đầu với giải pháp công nghệ hiện đại, sáng tạo giúp doanh nghiệp phát triển bền vững.',
+    target: 'Leading software company with modern, innovative technology solutions to help businesses grow sustainably.',
+  });
   
   const [selectedTab, setSelectedTab] = useState<'info' | 'emails' | 'general'>('info');
   const [emailTab, setEmailTab] = useState<'inbox' | 'compose'>('inbox');
   
-  const [contactEmails] = useState<string[]>([
+  const [contactEmails, setContactEmails] = useState<string[]>([
     'contact@dudisoftware.com',
     'support@dudisoftware.com',
     'sales@dudisoftware.com'
@@ -36,30 +43,40 @@ export default function ContactsManagementPage() {
     { id: '3', subject: 'Câu hỏi về dịch vụ bảo trì', from: 'support@acme.com', date: '2025-10-27', preview: 'Xin vui lòng cung cấp thông tin...', unread: false },
   ]);
   const [supportEmail, setSupportEmail] = useState<string>('contact@dudisoftware.com');
-  const [generalItems, setGeneralItems] = useState<{ id: string; title: string; content: string }[]>([
+  const [generalItems, setGeneralItems] = useState<
+    { id: string; title: { source: string; target: string }; content: { source: string; target: string } }[]
+  >([
     {
       id: 'about',
-      title: 'About Us',
-      content:
-        'DUDI Software was founded with the mission to bring the most modern technology solutions to Vietnamese businesses.',
+      title: { source: 'Giới thiệu', target: 'About Us' },
+      content: {
+        source: 'DUDI Software được thành lập với sứ mệnh mang những giải pháp công nghệ hiện đại nhất đến doanh nghiệp Việt Nam.',
+        target: 'DUDI Software was founded with the mission to bring the most modern technology solutions to Vietnamese businesses.',
+      },
     },
     {
       id: 'mission',
-      title: 'Mission',
-      content:
-        'Help businesses achieve successful digital transformation through strategies and optimal costs',
+      title: { source: 'Sứ mệnh', target: 'Mission' },
+      content: {
+        source: 'Giúp doanh nghiệp chuyển đổi số thành công với chiến lược và chi phí tối ưu',
+        target: 'Help businesses achieve successful digital transformation through strategies and optimal costs',
+      },
     },
     {
       id: 'vision',
-      title: 'Vision',
-      content:
-        'Become a leading technology company in Vietnam with international reach.',
+      title: { source: 'Tầm nhìn', target: 'Vision' },
+      content: {
+        source: 'Trở thành công ty công nghệ hàng đầu Việt Nam với tầm vóc quốc tế.',
+        target: 'Become a leading technology company in Vietnam with international reach.',
+      },
     },
     {
       id: 'core-values',
-      title: 'Core Values',
-      content:
-        'Professionalism, efficiency, trust. Becoming a leading technology company in Vietnam with international reach.',
+      title: { source: 'Giá trị cốt lõi', target: 'Core Values' },
+      content: {
+        source: 'Chuyên nghiệp, hiệu quả, tin cậy. Hướng tới vị thế dẫn đầu tại Việt Nam và vươn ra quốc tế.',
+        target: 'Professionalism, efficiency, trust. Becoming a leading technology company in Vietnam with international reach.',
+      },
     },
   ]);
 
@@ -108,11 +125,14 @@ export default function ContactsManagementPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">Tên Công Ty</h3>
               </div>
-              <input
-                className="w-full rounded-lg border border-gray-300 p-3 text-sm outline-none transition focus:ring-2 focus:ring-blue-500"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                placeholder="Nhập tên công ty"
+              <TranslationForm
+                labelSource="Tên công ty (VI)"
+                labelTarget="Company Name (EN)"
+                sourceLang="vi"
+                targetLang="en"
+                valueSource={companyName.source}
+                valueTarget={companyName.target}
+                onChange={(v) => setCompanyName(v)}
               />
             </div>
 
@@ -124,32 +144,38 @@ export default function ContactsManagementPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">Địa Chỉ (có thể thêm nhiều)</h3>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {addresses.map((addr, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <input
-                      className="flex-1 rounded-lg border border-gray-300 p-3 text-sm outline-none transition focus:ring-2 focus:ring-blue-500"
-                      value={addr}
-                      onChange={(e) => {
+                  <div key={idx} className="rounded-lg border border-gray-200 p-3">
+                    <div className="mb-2 flex items-center justify-between">
+                      <p className="text-sm font-medium text-gray-900">Địa chỉ {idx + 1}</p>
+                      <button
+                        type="button"
+                        onClick={() => setAddresses(addresses.filter((_, i) => i !== idx))}
+                        className="rounded-lg p-2 text-red-600 transition hover:bg-red-50"
+                        title="Xóa địa chỉ"
+                      >
+                        <MdDelete size={18} />
+                      </button>
+                    </div>
+                    <TranslationForm
+                      labelSource="Địa chỉ (VI)"
+                      labelTarget="Address (EN)"
+                      sourceLang="vi"
+                      targetLang="en"
+                      valueSource={addr.source}
+                      valueTarget={addr.target}
+                      onChange={(v) => {
                         const next = [...addresses];
-                        next[idx] = e.target.value;
+                        next[idx] = v;
                         setAddresses(next);
                       }}
-                      placeholder={`Địa chỉ ${idx + 1}`}
                     />
-                    <button
-                      type="button"
-                      onClick={() => setAddresses(addresses.filter((_, i) => i !== idx))}
-                      className="rounded-lg p-2 text-red-600 transition hover:bg-red-50"
-                      title="Xóa địa chỉ"
-                    >
-                      <MdDelete size={18} />
-                    </button>
                   </div>
                 ))}
                 <button
                   type="button"
-                  onClick={() => setAddresses([...addresses, ''])}
+                  onClick={() => setAddresses([...addresses, { source: '', target: '' }])}
                   className="flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
                 >
                   <MdAdd size={16} /> Thêm địa chỉ
@@ -160,11 +186,14 @@ export default function ContactsManagementPage() {
             {/* Description */}
             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
               <h3 className="mb-4 text-lg font-semibold text-gray-900">Mô Tả Công Ty</h3>
-              <textarea
-                className="min-h-36 w-full resize-y rounded-lg border border-gray-300 p-3 text-sm outline-none transition focus:ring-2 focus:ring-blue-500"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Mô tả công ty"
+              <TranslationForm
+                labelSource="Mô tả (VI)"
+                labelTarget="Description (EN)"
+                sourceLang="vi"
+                targetLang="en"
+                valueSource={description.source}
+                valueTarget={description.target}
+                onChange={(v) => setDescription(v)}
               />
             </div>
 
@@ -255,7 +284,7 @@ export default function ContactsManagementPage() {
                   onClick={() =>
                     setGeneralItems([
                       ...generalItems,
-                      { id: Math.random().toString(36).slice(2), title: 'Tiêu đề mới', content: '' },
+                      { id: Math.random().toString(36).slice(2), title: { source: '', target: '' }, content: { source: '', target: '' } },
                     ])
                   }
                   className="flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
@@ -266,36 +295,47 @@ export default function ContactsManagementPage() {
 
               <div className="space-y-4">
                 {generalItems.map((item, idx) => (
-                  <div key={item.id} className="rounded-lg border border-gray-200 p-4">
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <input
-                        className="w-full border-none bg-transparent p-0 text-base font-semibold text-gray-900 outline-none focus:ring-0"
-                        value={item.title}
-                        onChange={(e) => {
-                          const next = [...generalItems];
-                          next[idx] = { ...item, title: e.target.value };
-                          setGeneralItems(next);
-                        }}
-                      />
+                  <div key={item.id} className="space-y-3 rounded-lg border border-gray-200 p-4">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium text-gray-900">Tiêu đề</p>
                       <button
                         type="button"
                         onClick={() => setGeneralItems(generalItems.filter((g) => g.id !== item.id))}
-                        className="ml-2 rounded-lg p-2 text-red-600 transition hover:bg-red-50"
+                        className="rounded-lg p-2 text-red-600 transition hover:bg-red-50"
                         title="Xóa mục"
                       >
                         <MdDelete size={18} />
                       </button>
                     </div>
-                    <textarea
-                      className="min-h-28 w-full resize-y rounded-lg border border-gray-300 p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500"
-                      value={item.content}
-                      onChange={(e) => {
+                    <TranslationForm
+                      labelSource="Tiêu đề (VI)"
+                      labelTarget="Title (EN)"
+                      sourceLang="vi"
+                      targetLang="en"
+                      valueSource={item.title.source}
+                      valueTarget={item.title.target}
+                      onChange={(v) => {
                         const next = [...generalItems];
-                        next[idx] = { ...item, content: e.target.value };
+                        next[idx] = { ...item, title: v };
                         setGeneralItems(next);
                       }}
-                      placeholder="Nội dung mô tả"
                     />
+                    <div className="pt-2">
+                      <p className="mb-2 text-sm font-medium text-gray-900">Nội dung</p>
+                      <TranslationForm
+                        labelSource="Nội dung (VI)"
+                        labelTarget="Content (EN)"
+                        sourceLang="vi"
+                        targetLang="en"
+                        valueSource={item.content.source}
+                        valueTarget={item.content.target}
+                        onChange={(v) => {
+                          const next = [...generalItems];
+                          next[idx] = { ...item, content: v };
+                          setGeneralItems(next);
+                        }}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -315,18 +355,35 @@ export default function ContactsManagementPage() {
             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900">Email Liên Hệ Công Ty</h3>
-                <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+                <button
+                  type="button"
+                  onClick={() => setContactEmails([...contactEmails, ''])}
+                  className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                >
                   + Thêm Email
                 </button>
               </div>
               <div className="space-y-2">
                 {contactEmails.map((email, idx) => (
-                  <div key={idx} className="flex items-center justify-between rounded-lg border border-gray-200 p-3 transition hover:bg-gray-50">
-                    <div className="flex items-center gap-3">
+                  <div key={idx} className="flex items-center justify-between gap-2 rounded-lg border border-gray-200 p-3 transition hover:bg-gray-50">
+                    <div className="flex flex-1 items-center gap-3">
                       <MdEmail size={18} className="text-blue-600" />
-                      <span className="text-sm font-medium text-gray-900">{email}</span>
+                      <input
+                        className="w-full rounded-lg border border-gray-300 p-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="email@example.com"
+                        value={email}
+                        onChange={(e) => {
+                          const next = [...contactEmails];
+                          next[idx] = e.target.value;
+                          setContactEmails(next);
+                        }}
+                      />
                     </div>
-                    <button className="rounded-lg p-2 text-red-600 transition hover:bg-red-50">
+                    <button
+                      type="button"
+                      onClick={() => setContactEmails(contactEmails.filter((_, i) => i !== idx))}
+                      className="rounded-lg p-2 text-red-600 transition hover:bg-red-50"
+                    >
                       <MdDelete size={18} />
                     </button>
                   </div>
