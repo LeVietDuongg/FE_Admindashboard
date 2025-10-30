@@ -27,30 +27,19 @@ const sidebarItems: SidebarItem[] = [
   },
   {
     icon: MdFolder,
-    label: 'Quản Lý Chủ Đề',
-    href: '/topics',
+    label: 'Quản Lý Dự Án',
+    href: '/management/projects',
   },
   {
     icon: MdDescription,
-    label: 'Quản Lý Bài Viết',
-    href: '/posts',
+    label: 'Quản Lý Tuyển Dụng',
+    href: '/management/careers',
   },
   {
     icon: MdPeople,
-    label: 'Quản Lý Admin',
-    href: '/admins',
+    label: 'Quản Lý Liên Hệ',
+    href: '/management/contacts',
   },
-  {
-    icon: MdImage,
-    label: 'Quản Lý Banner',
-    href: '/banners',
-  },
-  {
-    icon: MdMail,
-    label: 'Quản Lý Đăng Ký',
-    href: '/subscriptions',
-  },
-
 ];
 
 interface SidebarProps {
@@ -82,11 +71,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="flex h-16 items-center justify-center border-b border-gray-200">
           <div className="flex items-center space-x-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
-              <span className="text-lg font-bold text-white">M</span>
+              <span className="text-lg font-bold text-white">D</span>
             </div>
             <div>
-              <h1 className="text-lg font-bold text-gray-900">money wise</h1>
-              <p className="text-xs text-gray-500">Smart Money Dashboard</p>
+              <h1 className="text-lg font-bold text-gray-900">DUDISOFTWARE</h1>
+              <p className="text-xs text-gray-500">Admin Dashboard</p>
             </div>
           </div>
         </div>
@@ -129,20 +118,15 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </ul>
         </nav>
 
-        {/* Bottom section - Restaurant theme promotion */}
+        {/* Bottom section */}
         <div className="absolute bottom-3 left-3 right-3">
-          <div className="rounded-lg bg-gradient-to-br from-orange-50 to-red-50 p-3">
-            <div className="mb-2 flex items-center space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100">
-                <span className="text-sm">🍳</span>
-              </div>
-              <div>
-                <p className="text-xs font-medium text-gray-900">Swiss Restaurant Admin Dashboard</p>
-                <p className="text-xs text-gray-600">Swiss Restaurant Admin Dashboard</p>
-              </div>
+          <div className="rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50 p-3">
+            <div className="mb-2">
+              <p className="text-xs font-medium text-gray-900">DUDISOFTWARE</p>
+              <p className="text-xs text-gray-600">Build. Ship. Scale.</p>
             </div>
-            <button className="w-full rounded-md bg-orange-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-orange-700">
-              Add Recipe
+            <button className="w-full rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700">
+              New Item
             </button>
           </div>
         </div>

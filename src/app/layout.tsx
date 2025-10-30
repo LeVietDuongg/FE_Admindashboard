@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Money Wise - Admin Dashboard",
-  description: "Admin dashboard for Money Wise - Smart money management platform",
+  title: "DUDISOFTWARE - Admin Dashboard",
+  description: "DUDISOFTWARE admin dashboard",
 };
 
 export default function RootLayout({

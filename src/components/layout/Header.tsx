@@ -34,9 +34,9 @@ export default function Header({ onMenuClick }: HeaderProps) {
         </button>
         {/* Page title */}
         <div className="min-w-0">
-          <h1 className="truncate text-base sm:text-xl font-semibold text-gray-900">Dashboard</h1>
+          <h1 className="truncate text-base sm:text-xl font-semibold text-gray-900">DUDISOFTWARE Dashboard</h1>
           <p className="text-sm text-gray-500 hidden sm:block">
-            Hi, Samantha. Welcome back to Supa Admin!
+            Manage content and communications for DUDISOFTWARE.
           </p>
         </div>
       </div>
