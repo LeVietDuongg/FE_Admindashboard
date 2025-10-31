@@ -34,9 +34,7 @@ export default function TranslationForm({
     setTargetText(valueTarget);
   }, [valueTarget]);
 
-  useEffect(() => {
-    onChange?.({ source: sourceText, target: targetText });
-  }, [sourceText, targetText, onChange]);
+  // Note: We intentionally do NOT call onChange in an effect to avoid loops
 
   const debouncedSource = useDebounce(sourceText, 350);
 
@@ -57,6 +55,7 @@ export default function TranslationForm({
         const data = await res.json();
         if (!cancelled && typeof data?.text === 'string') {
           setTargetText(data.text);
+          onChange?.({ source: sourceText, target: data.text });
         }
       } catch {
         // swallow; keep last value
@@ -77,7 +76,11 @@ export default function TranslationForm({
         <textarea
           className="min-h-36 resize-y rounded-md border border-gray-300 p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500"
           value={sourceText}
-          onChange={(e) => setSourceText(e.target.value)}
+          onChange={(e) => {
+            const val = e.target.value;
+            setSourceText(val);
+            onChange?.({ source: val, target: targetText });
+          }}
           placeholder="Nhập nội dung..."
         />
       </div>
@@ -88,7 +91,11 @@ export default function TranslationForm({
         <textarea
           className="min-h-36 resize-y rounded-md border border-gray-300 p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500"
           value={targetText}
-          onChange={(e) => setTargetText(e.target.value)}
+          onChange={(e) => {
+            const val = e.target.value;
+            setTargetText(val);
+            onChange?.({ source: sourceText, target: val });
+          }}
           placeholder="Bản dịch..."
         />
         <div className="mt-2 flex items-center justify-end gap-2">
@@ -97,6 +104,7 @@ export default function TranslationForm({
             className="rounded-md border px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
             onClick={() => {
               setSourceText(targetText);
+              onChange?.({ source: targetText, target: targetText });
             }}
           >
             Swap to Source
@@ -112,7 +120,10 @@ export default function TranslationForm({
                   body: JSON.stringify({ text: sourceText, sourceLang, targetLang }),
                 });
                 const data = await res.json();
-                if (typeof data?.text === 'string') setTargetText(data.text);
+                if (typeof data?.text === 'string') {
+                  setTargetText(data.text);
+                  onChange?.({ source: sourceText, target: data.text });
+                }
               } catch {}
             }}
           >
